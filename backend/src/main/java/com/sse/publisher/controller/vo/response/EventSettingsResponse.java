@@ -3,8 +3,6 @@ package com.sse.publisher.controller.vo.response;
 
 import com.sse.publisher.models.EventSettingsModel;
 
-import java.time.OffsetDateTime;
-
 public class EventSettingsResponse {
     private String description;
     private String alias;

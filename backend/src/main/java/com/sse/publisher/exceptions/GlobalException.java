@@ -2,7 +2,7 @@ package com.sse.publisher.exceptions;
 
 import org.slf4j.Logger;
 
-public class GlobalException extends RuntimeException{
+public class GlobalException extends RuntimeException {
 
     private final Logger LOGGER;
     private String formattedErrorMessage;

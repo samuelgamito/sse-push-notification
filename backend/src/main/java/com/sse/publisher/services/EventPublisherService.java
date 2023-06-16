@@ -3,7 +3,6 @@ package com.sse.publisher.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sse.publisher.constants.HttpConstants;
-import com.sse.publisher.controller.vo.request.PublishEventRequest;
 import com.sse.publisher.exceptions.ExceptionType;
 import com.sse.publisher.exceptions.GlobalException;
 import com.sse.publisher.models.EventModel;

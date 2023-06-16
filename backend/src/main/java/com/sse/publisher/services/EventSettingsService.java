@@ -1,13 +1,11 @@
 package com.sse.publisher.services;
 
 import com.sse.publisher.controller.vo.request.EventSettingsRequest;
-import com.sse.publisher.controller.vo.response.EventSettingsResponse;
-import com.sse.publisher.repositories.EventSettingsRepository;
 import com.sse.publisher.models.EventSettingsModel;
+import com.sse.publisher.repositories.EventSettingsRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class EventSettingsService {

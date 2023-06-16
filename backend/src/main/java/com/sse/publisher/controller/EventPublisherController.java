@@ -1,8 +1,8 @@
 package com.sse.publisher.controller;
 
+import com.sse.publisher.controller.vo.request.EventHistoryQueryParam;
 import com.sse.publisher.controller.vo.request.PublishEventRequest;
 import com.sse.publisher.controller.vo.response.EventModelResponse;
-import com.sse.publisher.controller.vo.response.EventSettingsResponse;
 import com.sse.publisher.models.EventModel;
 import com.sse.publisher.services.EventPublisherService;
 import org.springframework.http.HttpStatus;
@@ -41,7 +41,7 @@ public class EventPublisherController {
     }
 
     @GetMapping(path= "/history")
-    public ResponseEntity<List<EventModelResponse>> getEventHistory() {
+    public ResponseEntity<List<EventModelResponse>> getEventHistory(final EventHistoryQueryParam queryParam) {
 
         final List<EventModel> eventModels = eventPublisherService.getHistory();
 
