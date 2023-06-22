@@ -59,6 +59,18 @@ public class EventSettingsRepository {
         }
     }
 
+    public List<EventSettingsModel> getByMultipleAlias(final List<String> alias){
+        try{
+            final Query query = Query.query(Criteria.where(MongoConstants.ID).in(alias));
+            return mongoTemplate.find(query,EventSettingsModel.class, MongoConstants.SETTINGS_COLLECTION_NAME);
+        }catch (Exception e){
+            throw  GlobalException.getBuilder(LOGGER)
+                    .setExceptionType(ExceptionType.DATABASE_ERROR)
+                    .setFormattedErrorMessage(e.getMessage())
+                    .setDetailedError(e);
+        }
+    }
+
     public List<EventSettingsModel> getAll(){
         try{
             return mongoTemplate.findAll(EventSettingsModel.class,  MongoConstants.SETTINGS_COLLECTION_NAME);

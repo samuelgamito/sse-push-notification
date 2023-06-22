@@ -1,6 +1,8 @@
 package com.sse.publisher.controller.vo.response;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sse.publisher.configs.OffsetDateTimeSerializer;
 import com.sse.publisher.models.EventModel;
 
 import java.time.OffsetDateTime;
@@ -14,9 +16,13 @@ public class EventModelResponse {
 
     private String message;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime publishedAt;
 
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime createdAt;
+
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime updatedAt;
 
     private Map<String, String> metadata;

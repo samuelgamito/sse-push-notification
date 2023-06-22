@@ -2,6 +2,8 @@ package com.sse.publisher.controller.vo.response;
 
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sse.publisher.configs.OffsetDateTimeSerializer;
 import com.sse.publisher.models.UserModel;
 
 import java.time.OffsetDateTime;
@@ -12,7 +14,9 @@ public class UserResponse {
 
     private String username;
     private List<String> alias = new ArrayList<>();
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime createdAt;
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime updatedAt;
     public UserResponse(final UserModel user){
         this.alias = user.getAlias();

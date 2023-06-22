@@ -23,3 +23,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+queues:
+  exchange: ${QUEUES_EXCHANGES_NAME:sse_notification_exchange}

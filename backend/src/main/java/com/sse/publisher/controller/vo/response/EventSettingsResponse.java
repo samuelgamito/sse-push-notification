@@ -1,13 +1,21 @@
 package com.sse.publisher.controller.vo.response;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.sse.publisher.configs.OffsetDateTimeSerializer;
 import com.sse.publisher.models.EventSettingsModel;
+
+import java.time.OffsetDateTime;
 
 public class EventSettingsResponse {
     private String description;
     private String alias;
 
     private String routingKey;
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    private OffsetDateTime createdAt;
+    @JsonSerialize(using = OffsetDateTimeSerializer.class)
+    private OffsetDateTime updatedAt;
 
     public EventSettingsResponse(){
         super();
@@ -41,5 +49,21 @@ public class EventSettingsResponse {
 
     public void setRoutingKey(final String routingKey) {
         this.routingKey = routingKey;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(final OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
