@@ -1,6 +1,5 @@
 package com.sse.publisher.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,22 +13,29 @@ import java.util.Map;
 @Document
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EventModel {
+public class EventDatabaseModel extends EventNotificationModel {
 
     @Id
     private String id;
 
-    private String alias;
-
-    private String message;
-    @JsonSerialize(using = OffsetDateTimeSerializer.class)
-    private OffsetDateTime publishedAt;
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime createdAt;
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime updatedAt;
 
     private Map<String, String> metadata;
+
+    public EventDatabaseModel(final EventNotificationModel eventNotificationModel) {
+
+        this.setAlias(eventNotificationModel.getAlias());
+        this.setMessage(eventNotificationModel.getMessage());
+        this.setPublishedAt(eventNotificationModel.getPublishedAt());
+
+    }
+
+    public EventDatabaseModel() {
+        super();
+    }
 
     public Map<String, String> getMetadata() {
         return metadata;
@@ -63,27 +69,4 @@ public class EventModel {
         this.updatedAt = updatedAt;
     }
 
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(final String alias) {
-        this.alias = alias;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-    public OffsetDateTime getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(final OffsetDateTime publishedAt) {
-        this.publishedAt = publishedAt;
-    }
 }

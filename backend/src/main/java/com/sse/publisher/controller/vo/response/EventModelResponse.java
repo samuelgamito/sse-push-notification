@@ -3,7 +3,7 @@ package com.sse.publisher.controller.vo.response;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sse.publisher.configs.OffsetDateTimeSerializer;
-import com.sse.publisher.models.EventModel;
+import com.sse.publisher.models.EventDatabaseModel;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
@@ -31,13 +31,13 @@ public class EventModelResponse {
         super();
     }
 
-    public EventModelResponse(final EventModel eventModel){
-        id = eventModel.getId();
-        alias = eventModel.getAlias();
-        message = eventModel.getMessage();
-        publishedAt = eventModel.getPublishedAt();
-        createdAt = eventModel.getCreatedAt();
-        updatedAt = eventModel.getCreatedAt();
+    public EventModelResponse(final EventDatabaseModel eventDatabaseModel){
+        id = eventDatabaseModel.getId();
+        alias = eventDatabaseModel.getAlias();
+        message = eventDatabaseModel.getMessage();
+        publishedAt = eventDatabaseModel.getPublishedAt();
+        createdAt = eventDatabaseModel.getCreatedAt();
+        updatedAt = eventDatabaseModel.getCreatedAt();
     }
 
     public Map<String, String> getMetadata() {

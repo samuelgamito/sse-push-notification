@@ -3,7 +3,7 @@ package com.sse.publisher.repositories;
 import com.sse.publisher.constants.MongoConstants;
 import com.sse.publisher.exceptions.ExceptionType;
 import com.sse.publisher.exceptions.GlobalException;
-import com.sse.publisher.models.EventModel;
+import com.sse.publisher.models.EventDatabaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -25,7 +25,7 @@ public class EventRepository {
     }
 
 
-    public void saveEvent(final EventModel event) {
+    public void saveEvent(final EventDatabaseModel event) {
         final OffsetDateTime timeNow = OffsetDateTime.now();
         event.setCreatedAt(timeNow);
         event.setUpdatedAt(timeNow);
@@ -40,9 +40,9 @@ public class EventRepository {
         }
     }
 
-    public List<EventModel> getHistory() {
+    public List<EventDatabaseModel> getHistory() {
 
-        return mongoTemplate.findAll(EventModel.class, MongoConstants.HISTORY_COLLECTION_NAME);
+        return mongoTemplate.findAll(EventDatabaseModel.class, MongoConstants.HISTORY_COLLECTION_NAME);
 
     }
 }

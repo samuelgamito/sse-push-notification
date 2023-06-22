@@ -3,7 +3,8 @@ package com.sse.publisher.controller;
 import com.sse.publisher.controller.vo.request.EventHistoryQueryParam;
 import com.sse.publisher.controller.vo.request.PublishEventRequest;
 import com.sse.publisher.controller.vo.response.EventModelResponse;
-import com.sse.publisher.models.EventModel;
+import com.sse.publisher.models.EventDatabaseModel;
+import com.sse.publisher.models.EventNotificationModel;
 import com.sse.publisher.services.EventPublisherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +32,11 @@ public class EventPublisherController {
     @PostMapping(path= "/")
     public ResponseEntity<Void> publishEvent(@RequestBody @Validated final PublishEventRequest publishEventRequest) {
 
-        final EventModel eventModel = new EventModel();
-        eventModel.setAlias(publishEventRequest.getAlias());
-        eventModel.setMessage(publishEventRequest.getMessage());
+        final EventNotificationModel eventNotificationModel = new EventNotificationModel();
+        eventNotificationModel.setAlias(publishEventRequest.getAlias());
+        eventNotificationModel.setMessage(publishEventRequest.getMessage());
 
-        eventPublisherService.publish(eventModel);
+        eventPublisherService.publish(eventNotificationModel);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -43,9 +44,9 @@ public class EventPublisherController {
     @GetMapping(path= "/history")
     public ResponseEntity<List<EventModelResponse>> getEventHistory(final EventHistoryQueryParam queryParam) {
 
-        final List<EventModel> eventModels = eventPublisherService.getHistory();
+        final List<EventDatabaseModel> eventDatabaseModels = eventPublisherService.getHistory();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(eventModels.stream().map(EventModelResponse::new).collect(Collectors.toList()));
+                .body(eventDatabaseModels.stream().map(EventModelResponse::new).collect(Collectors.toList()));
     }
 }

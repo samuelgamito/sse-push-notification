@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sse.publisher.constants.HttpConstants;
 import com.sse.publisher.exceptions.ExceptionType;
 import com.sse.publisher.exceptions.GlobalException;
-import com.sse.publisher.models.EventModel;
+import com.sse.publisher.models.EventDatabaseModel;
+import com.sse.publisher.models.EventNotificationModel;
 import com.sse.publisher.models.EventSettingsModel;
 import com.sse.publisher.publishers.MessagePublisher;
 import com.sse.publisher.repositories.EventRepository;
@@ -39,40 +40,39 @@ public class EventPublisherService {
     }
 
 
-    private void setPublishAction(final EventModel eventModel, final String traceId){
+    private Map<String,String> getPublishAction(final String traceId){
         final Map<String, String> metadata = new HashMap<>();
         metadata.put("action", "published");
         metadata.put("traceId", traceId);
-        eventModel.setMetadata(metadata);
+       return metadata;
     }
-    private void setIgnoredAction(final EventModel eventModel, final String traceId){
+    private Map<String,String> getIgnoredAction(final String traceId){
         final Map<String, String> metadata = new HashMap<>();
         metadata.put("action", "ignored");
         metadata.put("traceId", traceId);
-        eventModel.setMetadata(metadata);
+        return metadata;
     }
 
-    public void publish(final EventModel eventModel){
+    public void publish(final EventNotificationModel eventNotificationModel){
 
         final OffsetDateTime timeNow = OffsetDateTime.now();
-        final EventSettingsModel eventInfo = eventSettingsRepository.getByAlias(eventModel.getAlias());
+        final EventSettingsModel eventInfo = eventSettingsRepository.getByAlias(eventNotificationModel.getAlias());
 
         final String traceId = httpServletRequest.getHeader(HttpConstants.TRACE_ID_HEADER);
 
-        eventModel.setPublishedAt(timeNow);
+        eventNotificationModel.setPublishedAt(timeNow);
 
         try {
             if(eventInfo != null){
                 messagePublisher.send(
                         eventInfo.getRoutingKey(),
-                        objectMapper.writeValueAsString(eventModel).getBytes(),
+                        objectMapper.writeValueAsString(eventNotificationModel).getBytes(),
                         traceId);
 
-                setPublishAction(eventModel, traceId);
-                eventRepository.saveEvent(eventModel);
+
+                sendEventToDatabase(eventNotificationModel,getPublishAction(traceId));
             }else{
-                setIgnoredAction(eventModel, traceId);
-                eventRepository.saveEvent(eventModel);
+                sendEventToDatabase(eventNotificationModel,getIgnoredAction(traceId));
             }
 
         } catch (JsonProcessingException e) {
@@ -81,7 +81,17 @@ public class EventPublisherService {
         }
     }
 
-    public List<EventModel> getHistory() {
+    private void sendEventToDatabase(final EventNotificationModel eventNotificationModel,
+                                     final Map<String, String> metadata){
+
+        final EventDatabaseModel eventDatabaseModel = new EventDatabaseModel(eventNotificationModel);
+        eventDatabaseModel.setMetadata(metadata);
+
+        eventRepository.saveEvent(eventDatabaseModel);
+
+    }
+
+    public List<EventDatabaseModel> getHistory() {
 
         return eventRepository.getHistory();
     }
