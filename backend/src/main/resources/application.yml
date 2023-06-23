@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+swaggerBaseUrl: ${SWAGGER_BASE_URL:localhost:${server.port}}
+
+logging:
+  level:
+    ROOT: ${LOG_ROOT_LEVEL:INFO}
+
+spring:
+  data:
+    mongodb:
+      database: ${MONGODB_DATABASE_NAME:events}
+      uri: ${MONGODB_CONNECTION_STRING:mongodb://localhost:27017}
+  rabbitmq:
+    host: ${RABBIT_MQ_HOST:localhost}
+    port: ${RABBIT_MQ_PORT:5672}
+    username: ${RABBIT_MQ_USER_NAME:guest}
+    password: ${RABBIT_MQ_PASSWORD:guest}
+    virtual-host: ${RABBIT_MQ_VIRTUAL_HOST:sse_test}
+    template:
+      exchange: ${QUEUES_EXCHANGES_NAME:sse_notification_exchange}
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+queues:
+  exchange: ${QUEUES_EXCHANGES_NAME:sse_notification_exchange}
