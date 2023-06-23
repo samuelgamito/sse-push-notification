@@ -11,4 +11,10 @@ public abstract class MongoConstants {
     public static final String HISTORY_COLLECTION_NAME = "history";
     public static final String USER_COLLECTION_NAME = "users";
     public static final String ALIAS_LIST_NAME = "alias";
+
+    public static final String METADATA_ACTION_NAME = "metadata.action";
+
+    public static final String METADATA_USER_ID_NAME = "metadata.userId";
+
+    public static final String EVENT_PUBLISHED_AT_NAME = "publishedAt";
 }

@@ -2,7 +2,7 @@ package com.sse.publisher.controller;
 
 import com.sse.publisher.controller.vo.request.EventHistoryQueryParam;
 import com.sse.publisher.controller.vo.request.PublishEventRequest;
-import com.sse.publisher.controller.vo.response.EventModelResponse;
+import com.sse.publisher.controller.vo.response.EventResponse;
 import com.sse.publisher.models.EventDatabaseModel;
 import com.sse.publisher.models.EventNotificationModel;
 import com.sse.publisher.services.EventPublisherService;
@@ -42,11 +42,11 @@ public class EventPublisherController {
     }
 
     @GetMapping(path= "/history")
-    public ResponseEntity<List<EventModelResponse>> getEventHistory(final EventHistoryQueryParam queryParam) {
+    public ResponseEntity<List<EventResponse>> getEventHistory(final EventHistoryQueryParam queryParam) {
 
         final List<EventDatabaseModel> eventDatabaseModels = eventPublisherService.getHistory();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(eventDatabaseModels.stream().map(EventModelResponse::new).collect(Collectors.toList()));
+                .body(eventDatabaseModels.stream().map(EventResponse::new).collect(Collectors.toList()));
     }
 }

@@ -1,14 +1,17 @@
 package com.sse.publisher.controller.vo.response;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.sse.publisher.configs.OffsetDateTimeSerializer;
 import com.sse.publisher.models.EventDatabaseModel;
+import com.sse.publisher.models.EventNotificationModel;
 
 import java.time.OffsetDateTime;
 import java.util.Map;
 
-public class EventModelResponse {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class EventResponse {
 
     private String id;
 
@@ -27,17 +30,23 @@ public class EventModelResponse {
 
     private Map<String, String> metadata;
 
-    public EventModelResponse(){
+    public EventResponse(){
         super();
     }
 
-    public EventModelResponse(final EventDatabaseModel eventDatabaseModel){
+    public EventResponse(final EventDatabaseModel eventDatabaseModel){
         id = eventDatabaseModel.getId();
         alias = eventDatabaseModel.getAlias();
         message = eventDatabaseModel.getMessage();
         publishedAt = eventDatabaseModel.getPublishedAt();
         createdAt = eventDatabaseModel.getCreatedAt();
         updatedAt = eventDatabaseModel.getCreatedAt();
+    }
+
+    public EventResponse(final EventNotificationModel eventNotificationModel) {
+        this.alias = eventNotificationModel.getAlias();
+        this.message = eventNotificationModel.getMessage();
+        this.publishedAt = eventNotificationModel.getPublishedAt();
     }
 
     public Map<String, String> getMetadata() {

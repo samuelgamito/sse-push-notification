@@ -7,6 +7,8 @@ import com.sse.publisher.models.EventDatabaseModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.time.OffsetDateTime;
@@ -44,5 +46,15 @@ public class EventRepository {
 
         return mongoTemplate.findAll(EventDatabaseModel.class, MongoConstants.HISTORY_COLLECTION_NAME);
 
+    }
+
+
+    public List<EventDatabaseModel> getUserHistoryLatest(final String username){
+
+            final Query queryCondition = Query.query(Criteria.where(MongoConstants.METADATA_USER_ID_NAME)
+                .is(username));
+
+
+            return mongoTemplate.find(queryCondition, EventDatabaseModel.class, MongoConstants.HISTORY_COLLECTION_NAME);
     }
 }

@@ -40,10 +40,11 @@ public class EventPublisherService {
     }
 
 
-    private Map<String,String> getPublishAction(final String traceId){
+    private Map<String,String> getPublishAction(final String traceId, final String routingKey){
         final Map<String, String> metadata = new HashMap<>();
         metadata.put("action", "published");
         metadata.put("traceId", traceId);
+        metadata.put("routingKey", routingKey);
        return metadata;
     }
     private Map<String,String> getIgnoredAction(final String traceId){
@@ -70,7 +71,7 @@ public class EventPublisherService {
                         traceId);
 
 
-                sendEventToDatabase(eventNotificationModel,getPublishAction(traceId));
+                sendEventToDatabase(eventNotificationModel,getPublishAction(traceId, eventInfo.getRoutingKey()));
             }else{
                 sendEventToDatabase(eventNotificationModel,getIgnoredAction(traceId));
             }
