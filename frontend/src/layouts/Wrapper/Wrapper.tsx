@@ -44,7 +44,10 @@ export const Wrapper: React.FunctionComponent<WrapperProps> = ({
         component='main'
         sx={{
           flexGrow: 1,
+          position: 'relative',
           p: 3,
+          backgroundColor: '#f5f5f5',
+          minHeight: '100vh',
           width: { sm: `calc(100% - ${drawerWidth}px)` },
         }}>
         <Toolbar />
