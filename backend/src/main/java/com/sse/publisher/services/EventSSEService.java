@@ -2,6 +2,7 @@ package com.sse.publisher.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sse.publisher.configs.factors.MessageListenerContainerFactory;
+import com.sse.publisher.constants.HttpConstants;
 import com.sse.publisher.constants.RabbitConstants;
 import com.sse.publisher.controller.vo.response.EventStreamResponse;
 import com.sse.publisher.helpers.DeclarableBuilder;
@@ -14,11 +15,14 @@ import com.sse.publisher.properties.QueueProperties;
 import com.sse.publisher.repositories.EventRepository;
 import com.sse.publisher.repositories.EventSettingsRepository;
 import com.sse.publisher.repositories.UserSettingsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -29,7 +33,7 @@ import java.util.UUID;
 @Service
 public class EventSSEService {
 
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventSSEService.class);
     private final EventRepository eventRepository;
     private final UserSettingsRepository userSettingsRepository;
     private final EventSettingsRepository eventSettingsRepository;
@@ -39,6 +43,7 @@ public class EventSSEService {
     private final ObjectMapper objectMapper;
 
     private final MessageListenerContainerFactory messageListenerContainerFactory;
+    private final HttpServletRequest httpServletRequest;
 
     public EventSSEService(final EventRepository eventRepository,
                            final UserSettingsRepository userSettingsRepository,
@@ -46,7 +51,8 @@ public class EventSSEService {
                            final AmqpAdmin amqpTemplate,
                            final QueueProperties queueProperties,
                            final ObjectMapper objectMapper,
-                           final MessageListenerContainerFactory messageListenerContainerFactory) {
+                           final MessageListenerContainerFactory messageListenerContainerFactory,
+                           final HttpServletRequest httpServletRequest) {
 
         this.eventRepository = eventRepository;
         this.userSettingsRepository = userSettingsRepository;
@@ -55,6 +61,7 @@ public class EventSSEService {
         this.queueProperties = queueProperties;
         this.objectMapper = objectMapper;
         this.messageListenerContainerFactory = messageListenerContainerFactory;
+        this.httpServletRequest = httpServletRequest;
     }
 
     public Flux<EventStreamResponse> consume(final String username){
@@ -66,7 +73,10 @@ public class EventSSEService {
         final String queueName = buildQueue(userInfo.getUsername(), eventSettingsModelList);
         final MessageListenerContainer mlc =
                 messageListenerContainerFactory.createMessageListenerContainer(queueName);
+        final String traceId = httpServletRequest.getHeader(HttpConstants.TRACE_ID_HEADER);
 
+
+        LOGGER.info(String.format("Connection starting %s, trace id: %s", username, traceId));
 
         return Flux.create(
                 emitter -> {
@@ -74,8 +84,6 @@ public class EventSSEService {
                             m -> {
 
 
-                                final String traceId =
-                                        m.getMessageProperties().getHeader(RabbitConstants.TRACE_ID_HEADER);
                                 final String routingKey = m.getMessageProperties().getReceivedRoutingKey();
                                 try {
                                     final EventNotificationModel eventNotificationModel =
@@ -88,6 +96,7 @@ public class EventSSEService {
                                             .getBuilderSimpleEvent()
                                                     .setListOfEvents(Collections.singletonList(eventNotificationModel));
 
+                                    System.out.println("Sending event");
 
                                     emitter.next(eventStreamResponseBuilder.build());
                                 } catch (IOException e) {
@@ -113,6 +122,7 @@ public class EventSSEService {
                                 mlc.start();
                             });
                     emitter.onDispose(mlc::stop);
+                    emitter.onCancel(mlc::stop);
                 });
     }
 

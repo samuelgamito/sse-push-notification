@@ -39,6 +39,7 @@ public class EventResponse {
         alias = eventDatabaseModel.getAlias();
         message = eventDatabaseModel.getMessage();
         publishedAt = eventDatabaseModel.getPublishedAt();
+        metadata = eventDatabaseModel.getMetadata();
         createdAt = eventDatabaseModel.getCreatedAt();
         updatedAt = eventDatabaseModel.getCreatedAt();
     }

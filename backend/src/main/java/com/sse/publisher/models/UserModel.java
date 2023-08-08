@@ -24,6 +24,15 @@ public class UserModel {
     @JsonSerialize(using = OffsetDateTimeSerializer.class)
     private OffsetDateTime updatedAt;
 
+    public UserModel(final UserRequest userRequest) {
+        this.username = userRequest.getUsername();
+        this.alias = userRequest.getAlias();
+    }
+    public UserModel() {
+        super();
+    }
+
+
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
@@ -40,13 +49,6 @@ public class UserModel {
         this.updatedAt = updatedAt;
     }
 
-    public UserModel(final UserRequest userRequest) {
-        this.username = userRequest.getUsername();
-    }
-
-    public UserModel() {
-        super();
-    }
 
     public String getUsername() {
         return username;
