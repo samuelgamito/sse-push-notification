@@ -154,3 +154,7 @@ Session.vim
 tags
 
 # End of https://www.gitignore.io/api/macos,vim,intellij,scala,sbt,git
+
+## React
+
+**/**/node_modules/
